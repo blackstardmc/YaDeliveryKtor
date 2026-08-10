@@ -1,0 +1,43 @@
+openapi: 3.0.3
+
+info:
+
+  title: Delivery API
+
+  description: |
+    Backend REST API for a delivery marketplace.
+
+  version: 0.1.0
+
+
+servers:
+
+  - url: http://localhost:8080
+
+
+paths:
+
+  /:
+
+    get:
+
+      summary: API information
+
+      responses:
+
+        "200":
+
+          description: API is running
+
+
+  /health:
+
+    get:
+
+      summary: Health check
+
+      responses:
+
+        "200":
+
+          description: Service is healthy

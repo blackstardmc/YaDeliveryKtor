@@ -1,0 +1,88 @@
+services:
+
+  postgres:
+    image: postgres:17-alpine
+
+    container_name: delivery-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${DB_NAME:-delivery}
+      POSTGRES_USER: ${DB_USER:-delivery}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-delivery}
+
+    ports:
+      - "${DB_PORT:-5432}:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USER:-delivery} -d ${DB_NAME:-delivery}"
+        ]
+
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - delivery-network
+
+
+  backend:
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: delivery-backend
+
+    restart: unless-stopped
+
+    depends_on:
+
+      postgres:
+        condition: service_healthy
+
+    environment:
+
+      PORT: 8080
+      HOST: 0.0.0.0
+
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-delivery}
+      DB_USER: ${DB_USER:-delivery}
+      DB_PASSWORD: ${DB_PASSWORD:-delivery}
+
+      DB_POOL_SIZE: ${DB_POOL_SIZE:-10}
+
+      JWT_ISSUER: ${JWT_ISSUER:-delivery-api}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-delivery-client}
+      JWT_SECRET: ${JWT_SECRET:-change-me}
+      JWT_EXPIRATION_MINUTES: ${JWT_EXPIRATION_MINUTES:-60}
+
+      CORS_ALLOWED_HOSTS: ${CORS_ALLOWED_HOSTS:-localhost:3000}
+
+    ports:
+      - "${PORT:-8080}:8080"
+
+    networks:
+      - delivery-network
+
+
+volumes:
+
+  postgres_data:
+    name: delivery-postgres-data
+
+
+networks:
+
+  delivery-network:
+    name: delivery-network
+    driver: bridge
