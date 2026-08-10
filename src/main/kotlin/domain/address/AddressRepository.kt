@@ -1,0 +1,19 @@
+package com.blackneko.domain.address
+
+import com.blackneko.domain.product.Product
+import java.util.UUID
+
+interface AddressRepository {
+    suspend fun findById(id: UUID): Address?
+
+    suspend fun findByUser(
+        userID: UUID
+    ): List<Address>
+
+    suspend fun save(address: Address): Address
+
+    suspend fun update(address: Address): Address
+
+    suspend fun delete(id: UUID)
+}
+
