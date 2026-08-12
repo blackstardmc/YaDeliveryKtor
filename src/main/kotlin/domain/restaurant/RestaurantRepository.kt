@@ -4,13 +4,25 @@ import java.util.UUID
 
 interface RestaurantRepository {
 
-    suspend fun findById(id: UUID): Restaurant?
+    suspend fun findById(
+        id: UUID
+    ): Restaurant?
 
-    suspend fun findAll(): List<Restaurant>
+    suspend fun findByOwner(
+        ownerId: UUID
+    ): List<Restaurant>
 
-    suspend fun save(restaurant: Restaurant): Restaurant
+    suspend fun findAllActive(): List<Restaurant>
 
-    suspend fun update(restaurant: Restaurant): Restaurant
+    suspend fun save(
+        restaurant: Restaurant
+    ): Restaurant
 
-    suspend fun delete(id: UUID)
+    suspend fun update(
+        restaurant: Restaurant
+    ): Restaurant
+
+    suspend fun delete(
+        id: UUID
+    )
 }

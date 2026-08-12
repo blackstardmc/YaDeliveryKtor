@@ -18,4 +18,31 @@ data class Address(
     val isDefault: Boolean,
     val createdAt: Instant,
     val updatedAt: Instant
-)
+){
+    init {
+        require(street.isNotBlank()) {
+            "Street cannot be blank"
+        }
+
+        require(city.isNotBlank()) {
+            "City cannot be blank"
+        }
+
+        latitude?.let {
+            require(it in -90.0..90.0) {
+                "Invalid latitude"
+            }
+        }
+
+        longitude?.let {
+            require(it in -180.0..180.0) {
+                "Invalid longitude"
+            }
+        }
+    }
+
+    fun hasCoordinates(): Boolean {
+        return latitude != null &&
+                longitude != null
+    }
+}

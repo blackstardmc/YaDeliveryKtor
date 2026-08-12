@@ -12,4 +12,14 @@ data class Category(
     val isActive: Boolean,
     val createdAt: Instant,
     val updatedAt: Instant
-)
+){
+    init {
+        require(name.isNotBlank()) {
+            "Category name cannot be blank"
+        }
+
+        require(sortOrder >= 0) {
+            "Sort order cannot be negative"
+        }
+    }
+}

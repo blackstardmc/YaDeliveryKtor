@@ -14,4 +14,15 @@ data class Product(
     val isAvailable: Boolean,
     val createdAt: Instant,
     val updatedAt: Instant
-)
+) {
+    init {
+        require(name.isNotBlank()) {
+            "Product name cannot be blank"
+        }
+    }
+
+    fun canBeOrdered(): Boolean {
+        return isAvailable &&
+                !price.isZero()
+    }
+}

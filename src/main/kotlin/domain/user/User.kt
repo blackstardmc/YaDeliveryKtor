@@ -10,11 +10,48 @@ data class User(
     val passwordHash: String,
     val firstName: String,
     val lastName: String,
-    val role: UserRole,
+    val roles: Set<Role>,
     val isActive: Boolean,
     val createdAt: Instant,
     val updatedAt: Instant
-)
+) {
+    init {
+        require(phone.isNotBlank()) {
+            "Phone cannot be blank"
+        }
+
+        require(firstName.isNotBlank()) {
+            "First name cannot be blank"
+        }
+
+        require(lastName.isNotBlank()) {
+            "Last name cannot be blank"
+        }
+
+        require(roles.isNotEmpty()) {
+            "User must have at least one role"
+        }
+    }
+
+    fun hasRole(role: Role): Boolean {
+        return role in roles
+    }
+
+    fun hasPermission(
+        permission: Permission
+    ): Boolean {
+        return roles.any {
+            RolePermissions.hasPermission(
+                role = it,
+                permission = permission
+            )
+        }
+    }
+
+    fun canLogin(): Boolean {
+        return isActive
+    }
+}
 
 
 

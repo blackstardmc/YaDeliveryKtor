@@ -13,5 +13,19 @@ data class Restaurant(
     val status: RestaurantStatus,
     val createdAt: Instant,
     val updatedAt: Instant
-)
+){
+    init {
+        require(name.isNotBlank()) {
+            "Restaurant name cannot be blank"
+        }
+    }
+
+    fun isActive(): Boolean {
+        return status == RestaurantStatus.ACTIVE
+    }
+
+    fun canReceiveOrders(): Boolean {
+        return status == RestaurantStatus.ACTIVE
+    }
+}
 

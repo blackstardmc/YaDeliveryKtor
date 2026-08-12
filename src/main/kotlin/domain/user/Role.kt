@@ -1,6 +1,6 @@
 package com.blackneko.domain.user
 
-enum class UserRole {
+enum class Role {
     CUSTOMER,
     RESTAURANT,
     DRIVER,

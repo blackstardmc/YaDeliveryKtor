@@ -4,7 +4,9 @@ import java.util.UUID
 
 interface OrderRepository {
 
-    suspend fun findById(id: UUID): Order?
+    suspend fun findById(
+        id: UUID
+    ): Order?
 
     suspend fun findByCustomer(
         customerId: UUID
@@ -18,7 +20,13 @@ interface OrderRepository {
         driverId: UUID
     ): List<Order>
 
-    suspend fun save(order: Order): Order
+    suspend fun findAvailableForDrivers(): List<Order>
 
-    suspend fun update(order: Order): Order
+    suspend fun save(
+        order: Order
+    ): Order
+
+    suspend fun update(
+        order: Order
+    ): Order
 }
