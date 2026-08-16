@@ -1,7 +1,7 @@
 package com.blackneko.domain.restaurant
 
 import java.util.UUID
-import kotlin.time.Instant
+import java.time.Instant
 
 data class Restaurant(
     val id: UUID,

@@ -4,8 +4,7 @@ import com.blackneko.domain.shared.InvalidOrderException
 import com.blackneko.domain.shared.InvalidOrderStatusTransitionException
 import com.blackneko.domain.shared.Money
 import java.util.UUID
-import kotlin.time.Clock
-import kotlin.time.Instant
+import java.time.Instant
 
 data class Order(
     val id: UUID,
@@ -54,7 +53,7 @@ data class Order(
 
         return copy(
             driverId = driverId,
-            updatedAt = Clock.System.now(),
+            updatedAt = Instant.now(),
         )
     }
 
@@ -73,7 +72,7 @@ data class Order(
             )
         }
 
-        val now = Clock.System.now()
+        val now = Instant.now()
 
         return when (newStatus) {
 

@@ -1,7 +1,7 @@
 package com.blackneko.domain.user
 
+import java.time.Instant
 import java.util.UUID
-import kotlin.time.Instant
 
 data class User(
     val id: UUID,

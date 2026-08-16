@@ -1,7 +1,7 @@
 package com.blackneko.domain.category
 
 import java.util.UUID
-import kotlin.time.Instant
+import java.time.Instant
 
 data class Category(
     val id: UUID,

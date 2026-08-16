@@ -2,7 +2,7 @@ package com.blackneko.domain.driver
 
 import java.util.UUID
 import kotlin.time.Clock
-import kotlin.time.Instant
+import java.time.Instant
 
 data class Driver(
     val id: UUID,
@@ -28,7 +28,7 @@ data class Driver(
 
         return copy(
             status = DriverStatus.BUSY,
-            updatedAt = Clock.System.now()
+            updatedAt = Instant.now()
         )
     }
 
@@ -39,7 +39,7 @@ data class Driver(
 
         return copy(
             status = DriverStatus.AVAILABLE,
-            updatedAt = Clock.System.now()
+            updatedAt = Instant.now()
         )
     }
 }

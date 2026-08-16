@@ -1,8 +1,8 @@
 package com.blackneko.domain.product
 
 import com.blackneko.domain.shared.Money
+import java.time.Instant
 import java.util.UUID
-import kotlin.time.Instant
 
 data class Product(
     val id: UUID,
