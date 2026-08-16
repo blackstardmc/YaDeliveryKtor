@@ -1,6 +1,8 @@
 package com.blackneko.infrastructure.database
 
 import com.blackneko.application.TransactionRunner
+import kotlinx.coroutines.Dispatchers
+import org.jetbrains.exposed.v1.jdbc.transactions.experimental.newSuspendedTransaction
 
 class TransactionRunnerImpl : TransactionRunner {
 
@@ -8,6 +10,10 @@ class TransactionRunnerImpl : TransactionRunner {
         block: suspend () -> T
     ): T {
 
-        return block()
+        return newSuspendedTransaction(
+            Dispatchers.IO
+        ) {
+            block()
+        }
     }
 }

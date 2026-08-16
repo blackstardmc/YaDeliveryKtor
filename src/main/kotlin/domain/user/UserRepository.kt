@@ -25,6 +25,9 @@ interface UserRepository {
         user: User
     ): User
 
+
+    suspend fun delete(id: UUID): Int
+
     suspend fun existsByEmail(
         email: String
     ): Boolean
@@ -32,4 +35,6 @@ interface UserRepository {
     suspend fun existsByPhone(
         phone: String
     ): Boolean
+
+    suspend fun findAll(): List<User>
 }

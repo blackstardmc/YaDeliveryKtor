@@ -6,21 +6,20 @@ import com.blackneko.infrastructure.database.providers.ClockProvider
 import com.blackneko.infrastructure.database.providers.IdGenerator
 import com.blackneko.infrastructure.database.providers.SystemClockProvider
 import com.blackneko.infrastructure.database.providers.UUIDGenerator
-import io.ktor.server.application.Application
-import io.ktor.server.application.install
 import org.koin.dsl.module
-import org.koin.ktor.plugin.Koin
-import org.koin.logger.slf4jLogger
 
-fun Application.configureKoin() {
 
-    install(Koin) {
+val repositoryModule = module {
 
-        slf4jLogger()
+    single<TransactionRunner> {
+        TransactionRunnerImpl()
+    }
 
-        modules(
-            applicationModule,
-            repositoryModule
-        )
+    single<ClockProvider> {
+        SystemClockProvider()
+    }
+
+    single<IdGenerator> {
+        UUIDGenerator()
     }
 }

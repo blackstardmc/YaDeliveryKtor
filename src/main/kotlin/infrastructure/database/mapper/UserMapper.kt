@@ -17,9 +17,7 @@ fun ResultRow.toUser(
 
         phone = this[UsersTable.phone],
 
-        passwordHash = PasswordHash(
-            this[UsersTable.passwordHash]
-        ),
+        passwordHash = this[UsersTable.passwordHash],
 
         firstName = this[UsersTable.firstName],
 
