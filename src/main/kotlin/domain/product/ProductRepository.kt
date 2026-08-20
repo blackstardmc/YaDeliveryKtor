@@ -20,6 +20,10 @@ interface ProductRepository {
         restaurantId: UUID
     ): List<Product>
 
+    suspend fun search(
+        filter: ProductFilter
+    ): List<Product>
+
     suspend fun save(
         product: Product
     ): Product

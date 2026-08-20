@@ -13,6 +13,11 @@ interface DriverRepository {
 
     suspend fun findAvailable(): List<Driver>
 
+    suspend fun findByStatus(
+        status: DriverStatus
+    ): List<Driver>
+
+
     suspend fun save(
         driver: Driver
     ): Driver

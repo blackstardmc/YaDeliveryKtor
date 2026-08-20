@@ -6,9 +6,8 @@ import com.blackneko.domain.shared.Money
 import com.blackneko.infrastructure.database.table.OrdersTable
 import org.jetbrains.exposed.v1.core.ResultRow
 
-fun ResultRow.toOrder() =
+fun ResultRow.toOrder(): Order =
     Order(
-
         id =
             this[OrdersTable.id].value,
 

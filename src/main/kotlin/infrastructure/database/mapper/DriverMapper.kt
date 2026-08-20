@@ -21,7 +21,10 @@ fun ResultRow.toDriver() =
             ),
 
         vehicleType =
-            VehicleType.valueOf(this[DriversTable.vehicleType]?:"") ,
+            this[DriversTable.vehicleType]
+                ?.let {
+                    VehicleType.valueOf(it)
+                },
 
         vehicleDescription =
             this[DriversTable.vehicleDescription],

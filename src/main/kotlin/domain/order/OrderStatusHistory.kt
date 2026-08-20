@@ -1,7 +1,7 @@
 package com.blackneko.domain.order
 
 import java.util.UUID
-import kotlin.time.Instant
+import java.time.Instant
 
 data class OrderStatusHistory(
     val id: UUID,

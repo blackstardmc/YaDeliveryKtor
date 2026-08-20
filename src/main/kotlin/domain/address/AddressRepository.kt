@@ -13,6 +13,10 @@ interface AddressRepository {
         userId: UUID
     ): List<Address>
 
+    suspend fun findDefaultByUser(
+        userId: UUID
+    ): Address?
+
     suspend fun save(
         address: Address
     ): Address
