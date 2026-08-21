@@ -1,8 +1,8 @@
 package com.blackneko.domain.order
 
 import com.blackneko.domain.shared.Money
+import java.time.Instant
 import java.util.UUID
-import kotlin.time.Clock
 
 object OrderFactory {
 
@@ -16,7 +16,7 @@ object OrderFactory {
         notes: String?
     ): Order {
 
-        val now = Clock.System.now()
+       val now = Instant.now()
 
         return Order(
             id = id,

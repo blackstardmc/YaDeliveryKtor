@@ -6,36 +6,64 @@ import org.jetbrains.exposed.v1.jdbc.Database
 
 object DatabaseFactory {
 
-    fun connect(
+    fun createDataSource(
         config: DatabaseConfig
-    ) {
+    ): HikariDataSource {
 
-        val hikari =
+        val hikariConfig =
             HikariConfig().apply {
 
-                jdbcUrl = config.jdbcUrl
+                jdbcUrl =
+                    config.jdbcUrl
 
                 driverClassName =
                     "org.postgresql.Driver"
 
-                username = config.user
+                username =
+                    config.user
 
-                password = config.password
+                password =
+                    config.password
 
-                maximumPoolSize = 10
+                maximumPoolSize =
+                    config.poolSize
 
                 minimumIdle = 2
 
                 isAutoCommit = false
 
                 transactionIsolation =
-                    "TRANSACTION_REPEATABLE_READ"
+                    "TRANSACTION_READ_COMMITTED"
 
-                validate()
+                connectionTimeout =
+                    10_000
+
+                validationTimeout =
+                    5_000
+
+                initializationFailTimeout =
+                    10_000
+
+                poolName =
+                    "delivery-hikari"
+
+                addDataSourceProperty(
+                    "reWriteBatchedInserts",
+                    "true"
+                )
             }
 
-        Database.connect(
-            HikariDataSource(hikari)
+        return HikariDataSource(
+            hikariConfig
+        )
+    }
+
+    fun connect(
+        dataSource: HikariDataSource
+    ): Database {
+
+        return Database.connect(
+            datasource = dataSource
         )
     }
 }

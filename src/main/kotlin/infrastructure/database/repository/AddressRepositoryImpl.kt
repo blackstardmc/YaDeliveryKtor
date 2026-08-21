@@ -55,6 +55,10 @@ class AddressRepositoryImpl(
                 }
         }
 
+    override suspend fun findDefaultByUser(userId: UUID): Address? {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun save(
         address: Address
     ): Address =
