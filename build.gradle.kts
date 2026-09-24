@@ -22,7 +22,7 @@ val hikariVersion = "7.0.2"
 val jwtVersion = "4.5.0"
 val bcryptVersion = "0.4"
 val logbackVersion = "1.5.18"
-
+val testcontainersVersion = "1.21.4"
 
 kotlin {
     jvmToolchain(21)
@@ -140,6 +140,28 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.0")
 
+    testImplementation("org.testcontainers:junit-jupiter:${testcontainersVersion}")
+    testImplementation("org.testcontainers:postgresql:${testcontainersVersion}")
+
+    // --------------------------------------------------
+    // AUTH
+    // --------------------------------------------------
+
+    implementation(
+        "io.ktor:ktor-server-auth-jvm:$ktorVersion"
+    )
+
+    implementation(
+        "io.ktor:ktor-server-auth-jwt-jvm:$ktorVersion"
+    )
+
+    implementation(
+        "com.auth0:java-jwt:4.5.0"
+    )
+
+    implementation(
+        "org.mindrot:jbcrypt:0.4"
+    )
 
     implementation(libs.logback.classic)
 
