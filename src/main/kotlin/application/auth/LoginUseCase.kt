@@ -8,7 +8,8 @@ import com.blackneko.domain.user.UserRepository
 class LoginUseCase(
     private val userRepository: UserRepository,
     private val passwordHasher: PasswordHasher,
-    private val tokenService: TokenService
+    private val tokenService: TokenService,
+    private val createAuthSession: CreateAuthSessionUseCase
 ) {
 
     suspend operator fun invoke(
@@ -52,6 +53,8 @@ class LoginUseCase(
         if (!validPassword) {
             throw AuthenticationException()
         }
+        val session =
+            createAuthSession(user)
 
         return LoginResult(
             userId =
@@ -63,7 +66,8 @@ class LoginUseCase(
             accessToken =
                 tokenService.generateAccessToken(
                     user
-                )
+                ),
+            refreshToken = session.refreshToken
         )
     }
 }

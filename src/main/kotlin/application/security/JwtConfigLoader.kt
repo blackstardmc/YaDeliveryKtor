@@ -1,5 +1,6 @@
 package com.blackneko.application.security
 
+import com.blackneko.infrastructure.security.JwtConfig
 import io.ktor.server.config.*
 
 fun ApplicationConfig.jwtConfig(): JwtConfig =
@@ -23,6 +24,12 @@ fun ApplicationConfig.jwtConfig(): JwtConfig =
         accessTokenExpirationMinutes =
             property(
                 "jwt.accessTokenExpirationMinutes"
+            )
+                .getString()
+                .toLong(),
+        refreshTokenExpirationDays =
+            property(
+                "jwt.refreshTokenExpirationDays"
             )
                 .getString()
                 .toLong()

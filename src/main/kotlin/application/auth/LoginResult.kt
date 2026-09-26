@@ -6,5 +6,6 @@ import java.util.UUID
 data class LoginResult(
     val userId: UUID,
     val roles: Set<Role>,
-    val accessToken: String
+    val accessToken: String,
+    val refreshToken: String,
 )

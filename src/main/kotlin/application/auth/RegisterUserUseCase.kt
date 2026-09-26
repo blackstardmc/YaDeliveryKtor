@@ -15,6 +15,7 @@ class RegisterUserUseCase(
     private val passwordHasher: PasswordHasher,
     private val tokenService: TokenService,
     private val transactionRunner: TransactionRunner,
+    private val createAuthSession: CreateAuthSessionUseCase,
     private val clock: Clock
 ) {
 
@@ -96,6 +97,8 @@ class RegisterUserUseCase(
             userRepository.save(
                 user
             )
+            val session =
+                createAuthSession(user)
 
             RegisterUserResult(
                 userId =
@@ -105,7 +108,9 @@ class RegisterUserUseCase(
                     tokenService
                         .generateAccessToken(
                             user
-                        )
+                        ),
+                refreshToken =
+                    session.refreshToken
             )
         }
     }

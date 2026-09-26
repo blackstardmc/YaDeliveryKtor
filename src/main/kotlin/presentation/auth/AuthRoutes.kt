@@ -1,4 +1,3 @@
-
 package com.blackneko.presentation.auth
 
 import com.blackneko.application.auth.*
@@ -23,8 +22,39 @@ fun Route.authRoutes() {
     val getCurrentUserUseCase
             by inject<GetCurrentUserUseCase>()
 
-    route("/auth") {
+    val refreshSessionUseCase
+            by inject<RefreshSessionUseCase>()
 
+    route("/auth") {
+        post("/refresh") {
+
+            val request =
+                call.receive<RefreshTokenRequest>()
+
+            val result =
+                refreshSessionUseCase(
+                    request.refreshToken
+                )
+
+            call.respond(
+                HttpStatusCode.OK,
+                AuthResponse(
+                    userId =
+                        result.userId.toString(),
+
+                    roles =
+                        result.roles.map {
+                            it.name
+                        },
+
+                    accessToken =
+                        result.accessToken,
+
+                    refreshToken =
+                        result.refreshToken
+                )
+            )
+        }
         post("/register") {
 
             val request =
@@ -63,7 +93,8 @@ fun Route.authRoutes() {
                         ),
 
                     accessToken =
-                        result.accessToken
+                        result.accessToken,
+                    refreshToken = result.refreshToken
                 )
             )
         }
@@ -97,7 +128,8 @@ fun Route.authRoutes() {
                         },
 
                     accessToken =
-                        result.accessToken
+                        result.accessToken,
+                    refreshToken = result.refreshToken
                 )
             )
         }

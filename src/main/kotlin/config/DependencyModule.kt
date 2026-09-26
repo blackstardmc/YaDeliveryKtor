@@ -3,6 +3,7 @@ package com.blackneko.config
 
 import com.blackneko.application.TransactionRunner
 import com.blackneko.domain.address.AddressRepository
+import com.blackneko.domain.auth.RefreshTokenRepository
 import com.blackneko.domain.category.CategoryRepository
 import com.blackneko.domain.driver.DriverRepository
 import com.blackneko.domain.order.OrderItemRepository
@@ -20,6 +21,7 @@ import com.blackneko.infrastructure.database.repository.OrderItemRepositoryImpl
 import com.blackneko.infrastructure.database.repository.OrderRepositoryImpl
 import com.blackneko.infrastructure.database.repository.OrderStatusHistoryRepositoryImpl
 import com.blackneko.infrastructure.database.repository.ProductRepositoryImpl
+import com.blackneko.infrastructure.database.repository.RefreshTokenRepositoryImpl
 import com.blackneko.infrastructure.database.repository.RestaurantRepositoryImpl
 import com.blackneko.infrastructure.database.repository.UserRepositoryImpl
 import com.zaxxer.hikari.HikariDataSource
@@ -58,6 +60,11 @@ fun infrastructureModule(
 
     single<AddressRepository> {
         AddressRepositoryImpl(
+            transactionRunner = get()
+        )
+    }
+    single<RefreshTokenRepository> {
+        RefreshTokenRepositoryImpl(
             transactionRunner = get()
         )
     }

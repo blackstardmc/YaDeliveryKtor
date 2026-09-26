@@ -2,7 +2,7 @@ package com.blackneko.presentation.security
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.blackneko.application.security.JwtConfig
+import com.blackneko.infrastructure.security.JwtConfig
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*

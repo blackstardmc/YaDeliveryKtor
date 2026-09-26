@@ -2,7 +2,7 @@ package com.blackneko.application.security
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.blackneko.application.security.JwtConfig
+import com.blackneko.infrastructure.security.JwtConfig
 import com.blackneko.application.security.TokenService
 import com.blackneko.domain.user.User
 import java.time.Instant
