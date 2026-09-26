@@ -9,6 +9,7 @@ import com.blackneko.infrastructure.database.DatabaseConfig
 import com.blackneko.infrastructure.database.DatabaseFactory
 import com.blackneko.infrastructure.database.FlywayFactory
 import com.blackneko.presentation.configureRouting
+import com.blackneko.presentation.security.configureAuthentication
 import io.ktor.server.application.*
 import io.ktor.server.netty.EngineMain
 
@@ -33,8 +34,7 @@ fun Application.module() {
     )
 
     configureSerialization()
-
+    configureAuthentication()
     configureStatusPages()
-
-   configureRouting()
+    configureRouting()
 }

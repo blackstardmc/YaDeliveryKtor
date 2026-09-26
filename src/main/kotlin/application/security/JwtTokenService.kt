@@ -1,4 +1,4 @@
-package com.blackneko.infrastructure.security
+package com.blackneko.application.security
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm

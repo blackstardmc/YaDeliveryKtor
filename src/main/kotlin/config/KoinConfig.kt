@@ -1,6 +1,7 @@
 package com.blackneko.config
 
 import com.blackneko.application.TransactionRunner
+import com.blackneko.application.security.jwtConfig
 import com.blackneko.infrastructure.database.TransactionRunnerImpl
 import com.blackneko.infrastructure.database.providers.ClockProvider
 import com.blackneko.infrastructure.database.providers.IdGenerator
@@ -19,6 +20,10 @@ fun Application.configureKoin(
     database: Database
 ) {
 
+    val jwtConfig =
+        environment.config
+            .jwtConfig()
+
     val config =
         environment.config
             .databaseConfig()
@@ -32,7 +37,8 @@ fun Application.configureKoin(
                 databaseConfig = config,
                 dataSource = dataSource,
                 database = database
-            )
+            ),
+            securityModule(jwtConfig)
         )
     }
 }

@@ -1,6 +1,7 @@
 package com.blackneko.presentation
 
 
+import com.blackneko.presentation.auth.authRoutes
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -32,7 +33,7 @@ fun Application.configureRouting() {
                 )
             )
         }
-
+        authRoutes()
         swaggerUI(
             path = "swagger",
             swaggerFile = "openapi/documentation.yaml"
