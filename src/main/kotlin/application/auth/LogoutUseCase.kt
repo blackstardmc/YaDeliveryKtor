@@ -37,7 +37,7 @@ class LogoutUseCase(
             return
         }
 
-        refreshTokenRepository.revoke(
+        refreshTokenRepository.revokeIfActive(
             id =
                 token.id,
 
