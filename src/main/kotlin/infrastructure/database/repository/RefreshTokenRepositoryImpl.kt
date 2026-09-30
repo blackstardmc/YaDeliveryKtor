@@ -70,23 +70,29 @@ class RefreshTokenRepositoryImpl(
                 .singleOrNull()
         }
 
-    override suspend fun revoke(
+    override suspend fun revokeIfActive(
         id: UUID,
         revokedAt: Instant
-    ) {
+    ): Boolean =
         transactionRunner.transaction {
 
-            RefreshTokensTable.update(
-                where = {
-                    RefreshTokensTable.id eq id
+            val updated =
+                RefreshTokensTable.update(
+                    where = {
+                        (RefreshTokensTable.id eq id) and
+                                RefreshTokensTable
+                                    .revokedAt
+                                    .isNull()
+                    }
+                ) {
+
+                    it[
+                        RefreshTokensTable.revokedAt
+                    ] = revokedAt
                 }
-            ) {
-                it[
-                    RefreshTokensTable.revokedAt
-                ] = revokedAt
-            }
+
+            updated == 1
         }
-    }
 
     override suspend fun revokeAllByUser(
         userId: UUID,

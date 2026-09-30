@@ -25,7 +25,26 @@ fun Route.authRoutes() {
     val refreshSessionUseCase
             by inject<RefreshSessionUseCase>()
 
+    val logoutUseCase
+            by inject<LogoutUseCase>()
+
+    val logoutAllUseCase
+            by inject<LogoutAllUseCase>()
+
     route("/auth") {
+        post("/logout") {
+
+            val request =
+                call.receive<RefreshTokenRequest>()
+
+            logoutUseCase(
+                request.refreshToken
+            )
+
+            call.respond(
+                HttpStatusCode.NoContent
+            )
+        }
         post("/refresh") {
 
             val request =
@@ -137,6 +156,21 @@ fun Route.authRoutes() {
         authenticate(
             JWT_AUTH
         ) {
+
+            post("/logout-all") {
+
+                val authenticated =
+                    call.authenticatedUser()
+
+                logoutAllUseCase(
+                    authenticated.userId
+                )
+
+                call.respond(
+                    HttpStatusCode.NoContent
+                )
+            }
+
 
             get("/me") {
 

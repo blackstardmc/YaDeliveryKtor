@@ -1,7 +1,10 @@
 package com.blackneko.config
 
+import com.blackneko.application.auth.CreateAuthSessionUseCase
 import com.blackneko.application.auth.GetCurrentUserUseCase
 import com.blackneko.application.auth.LoginUseCase
+import com.blackneko.application.auth.LogoutAllUseCase
+import com.blackneko.application.auth.LogoutUseCase
 import com.blackneko.application.auth.RefreshSessionUseCase
 import com.blackneko.application.auth.RegisterUserUseCase
 import com.blackneko.application.security.BCryptPasswordHasher
@@ -63,6 +66,32 @@ fun securityModule(
 
     single<RefreshTokenGenerator> {
         SecureRefreshTokenGenerator()
+    }
+
+    single<CreateAuthSessionUseCase> {
+        CreateAuthSessionUseCase(
+            refreshTokenRepository = get(),
+            refreshTokenGenerator = get(),
+            tokenService = get(),
+            transactionRunner = get(),
+            clock = get(),
+            tokenSettings = get()
+        )
+    }
+
+    single<LogoutUseCase> {
+        LogoutUseCase(
+            refreshTokenRepository = get(),
+            refreshTokenGenerator = get(),
+            clock = get(),
+        )
+    }
+
+    single<LogoutAllUseCase> {
+        LogoutAllUseCase(
+            refreshTokenRepository = get(),
+            clock = get(),
+        )
     }
 
     single {

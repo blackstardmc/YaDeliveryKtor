@@ -77,13 +77,19 @@ class RefreshSessionUseCase(
              * Rotación:
              * el token utilizado deja de ser válido.
              */
-            refreshTokenRepository.revoke(
-                id =
-                    current.id,
+            val revoked =
+                refreshTokenRepository
+                    .revokeIfActive(
+                        id =
+                            current.id,
 
-                revokedAt =
-                    now
-            )
+                        revokedAt =
+                            now
+                    )
+
+            if (!revoked) {
+                throw AuthenticationException()
+            }
 
             val rawNewToken =
                 refreshTokenGenerator.generate()

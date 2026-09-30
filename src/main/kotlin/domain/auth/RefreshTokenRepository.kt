@@ -13,10 +13,10 @@ interface RefreshTokenRepository {
         tokenHash: String
     ): RefreshToken?
 
-    suspend fun revoke(
+    suspend fun revokeIfActive(
         id: UUID,
         revokedAt: Instant
-    )
+    ): Boolean
 
     suspend fun revokeAllByUser(
         userId: UUID,
