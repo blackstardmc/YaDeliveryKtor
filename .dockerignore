@@ -1,0 +1,13 @@
+.git
+.gradle
+.idea
+.kotlin
+.codex
+.agents
+.aws
+build
+out
+.env
+.env.*
+*.log
+docs
