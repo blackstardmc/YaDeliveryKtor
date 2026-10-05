@@ -13,6 +13,7 @@ import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.update
 import java.util.UUID
+import com.blackneko.domain.shared.PageRequest
 
 class UserRepositoryImpl(
     transactionRunner: TransactionRunner
@@ -204,11 +205,13 @@ class UserRepositoryImpl(
         }
 
 
-    override suspend fun findAll(): List<User> =
+    override suspend fun findAll(page: PageRequest): List<User> =
         transactionRunner.transaction {
 
             UsersTable
                 .selectAll()
+                .orderBy(UsersTable.id, org.jetbrains.exposed.v1.core.SortOrder.ASC)
+                .limit(page.limit).offset(page.offset.toLong())
                 .map {
 
                     it.toUser(

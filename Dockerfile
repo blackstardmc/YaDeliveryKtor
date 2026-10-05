@@ -1,37 +1,15 @@
-# ==========================================
-# BUILD
-# ==========================================
-
-FROM gradle:9.3-jdk21 AS builder
-
+FROM eclipse-temurin:21-jdk AS builder
 WORKDIR /app
+COPY gradle gradle
+COPY gradlew build.gradle.kts settings.gradle.kts gradle.properties ./
+COPY src src
+RUN chmod +x gradlew && ./gradlew --no-daemon buildFatJar
 
-COPY . .
-
-RUN gradle clean buildFatJar --no-daemon
-
-
-# ==========================================
-# RUNTIME
-# ==========================================
-
-FROM eclipse-temurin:21-jre
-
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-
-RUN useradd \
-    --system \
-    --create-home \
-    --uid 1001 \
-    appuser
-
-COPY --from=builder \
-    /app/build/libs/*-all.jar \
-    /app/app.jar
-
-RUN chown -R appuser:appuser /app
-
-USER appuser
-
+RUN addgroup -S app && adduser -S -G app -u 1001 app
+COPY --from=builder --chown=app:app /app/build/libs/*-all.jar /app/app.jar
+USER app
 EXPOSE 8080
-
+HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 CMD wget -q -O - http://127.0.0.1:8080/live || exit 1
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

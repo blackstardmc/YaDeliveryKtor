@@ -10,11 +10,15 @@ import com.blackneko.infrastructure.database.table.RestaurantsTable
 
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.SortOrder
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.update
 import java.util.UUID
+import com.blackneko.domain.shared.PageRequest
 
 class CategoryRepositoryImpl(
     transactionRunner: TransactionRunner
@@ -36,19 +40,20 @@ class CategoryRepositoryImpl(
         }
 
     override suspend fun findByRestaurant(
-        restaurantId: UUID
-    ): List<Category> =
+        restaurantId: UUID, page: PageRequest, activeOnly: Boolean): List<Category> =
         transactionRunner.transaction {
 
             CategoriesTable
                 .selectAll()
                 .where {
-                    CategoriesTable.restaurant eq
+                    (CategoriesTable.restaurant eq
                             EntityID(
                                 restaurantId,
                                 RestaurantsTable
-                            )
+                            )) and (if (activeOnly) CategoriesTable.isActive eq true else Op.TRUE)
                 }
+                .orderBy(CategoriesTable.sortOrder to SortOrder.ASC, CategoriesTable.id to SortOrder.ASC)
+                .limit(page.limit).offset(page.offset.toLong())
                 .map {
                     it.toCategory()
                 }

@@ -14,6 +14,8 @@ object DatabaseCleaner {
             exec(
                 """
                 TRUNCATE TABLE
+                    order_requests,
+                    refresh_tokens,
                     order_status_history,
                     order_items,
                     orders,

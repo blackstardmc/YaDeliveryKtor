@@ -3,6 +3,8 @@ package com.blackneko.domain.security
 enum class Permission {
 
     PROFILE_READ,
+    ADDRESS_MANAGE,
+    CATEGORY_MANAGE,
 
     RESTAURANT_CREATE,
     RESTAURANT_UPDATE,

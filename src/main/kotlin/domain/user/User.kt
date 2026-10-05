@@ -2,6 +2,8 @@ package com.blackneko.domain.user
 
 import java.time.Instant
 import java.util.UUID
+import com.blackneko.domain.security.Permission
+import com.blackneko.domain.security.RolePermissions
 
 data class User(
     val id: UUID,
@@ -40,12 +42,7 @@ data class User(
     fun hasPermission(
         permission: Permission
     ): Boolean {
-        return roles.any {
-            RolePermissions.hasPermission(
-                role = it,
-                permission = permission
-            )
-        }
+        return permission in RolePermissions.permissionsFor(roles)
     }
 
     fun canLogin(): Boolean {

@@ -6,6 +6,8 @@ import com.blackneko.domain.address.AddressRepository
 import com.blackneko.infrastructure.database.mapper.toAddress
 import com.blackneko.infrastructure.database.table.AddressesTable
 import com.blackneko.infrastructure.database.table.UsersTable
+import com.blackneko.infrastructure.database.table.OrdersTable
+import com.blackneko.infrastructure.database.table.RestaurantsTable
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.eq
@@ -21,6 +23,11 @@ class AddressRepositoryImpl(
     TransactionRunner
 ) : BaseRepository(transactionRunner),
     AddressRepository {
+
+    override suspend fun isUsed(id: UUID): Boolean = transactionRunner.transaction {
+        !OrdersTable.selectAll().where { OrdersTable.deliveryAddress eq id }.limit(1).empty() ||
+            !RestaurantsTable.selectAll().where { RestaurantsTable.address eq id }.limit(1).empty()
+    }
 
     override suspend fun findById(
         id: UUID
@@ -55,8 +62,10 @@ class AddressRepositoryImpl(
                 }
         }
 
-    override suspend fun findDefaultByUser(userId: UUID): Address? {
-        TODO("Not yet implemented")
+    override suspend fun findDefaultByUser(userId: UUID): Address? = transactionRunner.transaction {
+        AddressesTable.selectAll().where {
+            (AddressesTable.user eq userId) and (AddressesTable.isDefault eq true)
+        }.singleOrNull()?.toAddress()
     }
 
     override suspend fun save(

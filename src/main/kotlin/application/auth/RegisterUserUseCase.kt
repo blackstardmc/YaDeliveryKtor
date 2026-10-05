@@ -20,12 +20,12 @@ class RegisterUserUseCase(
 ) {
 
     suspend operator fun invoke(
-        command: RegisterUserCommand
+        input: RegisterUserCommand
     ): RegisterUserResult {
 
-        validate(
-            command
-        )
+        RegisterUserValidator.validate(input)
+        val command = input.copy(email = input.email?.trim()?.lowercase(), phone = input.phone.trim(),
+            firstName = input.firstName.trim(), lastName = input.lastName.trim())
 
         return transactionRunner.transaction {
 
@@ -105,42 +105,10 @@ class RegisterUserUseCase(
                     user.id,
 
                 accessToken =
-                    tokenService
-                        .generateAccessToken(
-                            user
-                        ),
+                    session.accessToken,
                 refreshToken =
                     session.refreshToken
             )
-        }
-    }
-
-    private fun validate(
-        command: RegisterUserCommand
-    ) {
-
-        require(
-            command.phone.isNotBlank()
-        ) {
-            "Phone is required"
-        }
-
-        require(
-            command.firstName.isNotBlank()
-        ) {
-            "First name is required"
-        }
-
-        require(
-            command.lastName.isNotBlank()
-        ) {
-            "Last name is required"
-        }
-
-        require(
-            command.password.length >= 8
-        ) {
-            "Password must contain at least 8 characters"
         }
     }
 }

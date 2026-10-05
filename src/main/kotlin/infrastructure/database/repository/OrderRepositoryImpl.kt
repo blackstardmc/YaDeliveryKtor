@@ -19,6 +19,7 @@ import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.update
 import java.util.UUID
+import com.blackneko.domain.shared.PageRequest
 
 class OrderRepositoryImpl(
     transactionRunner: TransactionRunner
@@ -40,8 +41,7 @@ class OrderRepositoryImpl(
         }
 
     override suspend fun findByCustomer(
-        customerId: UUID
-    ): List<Order> =
+        customerId: UUID, page: PageRequest): List<Order> =
         transactionRunner.transaction {
 
             OrdersTable
@@ -57,14 +57,14 @@ class OrderRepositoryImpl(
                     OrdersTable.createdAt,
                     SortOrder.DESC
                 )
+                .limit(page.limit).offset(page.offset.toLong())
                 .map {
                     it.toOrder()
                 }
         }
 
     override suspend fun findByRestaurant(
-        restaurantId: UUID
-    ): List<Order> =
+        restaurantId: UUID, page: PageRequest): List<Order> =
         transactionRunner.transaction {
 
             OrdersTable
@@ -80,14 +80,14 @@ class OrderRepositoryImpl(
                     OrdersTable.createdAt,
                     SortOrder.DESC
                 )
+                .limit(page.limit).offset(page.offset.toLong())
                 .map {
                     it.toOrder()
                 }
         }
 
     override suspend fun findByDriver(
-        driverId: UUID
-    ): List<Order> =
+        driverId: UUID, page: PageRequest): List<Order> =
         transactionRunner.transaction {
 
             OrdersTable
@@ -103,12 +103,13 @@ class OrderRepositoryImpl(
                     OrdersTable.createdAt,
                     SortOrder.DESC
                 )
+                .limit(page.limit).offset(page.offset.toLong())
                 .map {
                     it.toOrder()
                 }
         }
 
-    override suspend fun findAvailableForDrivers():
+    override suspend fun findAvailableForDrivers(page: PageRequest):
             List<Order> =
         transactionRunner.transaction {
 
@@ -125,6 +126,7 @@ class OrderRepositoryImpl(
                     OrdersTable.createdAt,
                     SortOrder.ASC
                 )
+                .limit(page.limit).offset(page.offset.toLong())
                 .map {
                     it.toOrder()
                 }

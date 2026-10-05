@@ -58,7 +58,8 @@ data class Order(
     }
 
     fun transitionTo(
-        newStatus: OrderStatus
+        newStatus: OrderStatus,
+        now: Instant = Instant.now()
     ): Order {
 
         if (
@@ -71,8 +72,6 @@ data class Order(
                 "Cannot transition order from $status to $newStatus"
             )
         }
-
-        val now = Instant.now()
 
         return when (newStatus) {
 

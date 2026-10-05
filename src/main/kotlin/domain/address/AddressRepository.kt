@@ -4,6 +4,7 @@ import com.blackneko.domain.product.Product
 import java.util.UUID
 
 interface AddressRepository {
+    suspend fun isUsed(id: UUID): Boolean
 
     suspend fun findById(
         id: UUID

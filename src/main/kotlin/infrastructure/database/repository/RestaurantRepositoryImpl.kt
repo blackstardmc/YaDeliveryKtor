@@ -17,6 +17,7 @@ import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.update
 import java.util.UUID
+import com.blackneko.domain.shared.PageRequest
 
 class RestaurantRepositoryImpl(
     transactionRunner: TransactionRunner
@@ -38,8 +39,7 @@ class RestaurantRepositoryImpl(
         }
 
     override suspend fun findByOwner(
-        ownerId: UUID
-    ): List<Restaurant> =
+        ownerId: UUID, page: PageRequest): List<Restaurant> =
         transactionRunner.transaction {
 
             RestaurantsTable
@@ -51,12 +51,14 @@ class RestaurantRepositoryImpl(
                                 UsersTable
                             )
                 }
+                .limit(page.limit).offset(page.offset.toLong())
+                .orderBy(RestaurantsTable.id, org.jetbrains.exposed.v1.core.SortOrder.ASC)
                 .map {
                     it.toRestaurant()
                 }
         }
 
-    override suspend fun findAllActive(): List<Restaurant> =
+    override suspend fun findAllActive(page: PageRequest): List<Restaurant> =
         transactionRunner.transaction {
 
             RestaurantsTable
@@ -65,6 +67,8 @@ class RestaurantRepositoryImpl(
                     RestaurantsTable.status eq
                             RestaurantStatus.ACTIVE.name
                 }
+                .limit(page.limit).offset(page.offset.toLong())
+                .orderBy(RestaurantsTable.id, org.jetbrains.exposed.v1.core.SortOrder.ASC)
                 .map {
                     it.toRestaurant()
                 }

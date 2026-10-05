@@ -38,7 +38,8 @@ fun Application.configureKoin(
                 dataSource = dataSource,
                 database = database
             ),
-            securityModule(jwtConfig)
+            securityModule(jwtConfig),
+            marketplaceModule(this@configureKoin.environment.config.propertyOrNull("marketplace.deliveryFeeCents")?.getString()?.toLong() ?: 0)
         )
     }
 }

@@ -7,6 +7,11 @@ import kotlin.test.assertFailsWith
 
 
 class MoneyTest {
+    @org.junit.jupiter.api.Test
+    fun `money arithmetic rejects overflow`() {
+        kotlin.test.assertFailsWith<ArithmeticException> { Money(Long.MAX_VALUE) + Money(1) }
+        kotlin.test.assertFailsWith<ArithmeticException> { Money(Long.MAX_VALUE) * 2 }
+    }
 
     @Test
     fun `should add money`() {

@@ -14,7 +14,7 @@ value class Money(
 
     operator fun plus(other: Money): Money {
         return Money(
-            cents + other.cents
+            Math.addExact(cents, other.cents)
         )
     }
 
@@ -34,7 +34,7 @@ value class Money(
         }
 
         return Money(
-            cents * quantity
+            Math.multiplyExact(cents, quantity.toLong())
         )
     }
 

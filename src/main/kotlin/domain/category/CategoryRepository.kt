@@ -2,6 +2,7 @@ package com.blackneko.domain.category
 
 
 import java.util.UUID
+import com.blackneko.domain.shared.PageRequest
 
 interface CategoryRepository {
 
@@ -10,8 +11,7 @@ interface CategoryRepository {
     ): Category?
 
     suspend fun findByRestaurant(
-        restaurantId: UUID
-    ): List<Category>
+        restaurantId: UUID, page: PageRequest = PageRequest(), activeOnly: Boolean = false): List<Category>
 
     suspend fun save(
         category: Category

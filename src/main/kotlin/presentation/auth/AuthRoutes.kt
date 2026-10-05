@@ -10,8 +10,13 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import com.blackneko.config.AUTH_RATE_LIMIT
+import io.ktor.server.plugins.ratelimit.rateLimit
+import com.blackneko.infrastructure.security.JwtConfig
 
 fun Route.authRoutes() {
+
+    val jwtConfig by inject<JwtConfig>()
 
     val registerUserUseCase
             by inject<RegisterUserUseCase>()
@@ -32,6 +37,7 @@ fun Route.authRoutes() {
             by inject<LogoutAllUseCase>()
 
     route("/auth") {
+        rateLimit(AUTH_RATE_LIMIT) {
         post("/logout") {
 
             val request =
@@ -70,7 +76,8 @@ fun Route.authRoutes() {
                         result.accessToken,
 
                     refreshToken =
-                        result.refreshToken
+                        result.refreshToken,
+                    expiresIn = jwtConfig.accessTokenExpirationMinutes * 60
                 )
             )
         }
@@ -113,7 +120,8 @@ fun Route.authRoutes() {
 
                     accessToken =
                         result.accessToken,
-                    refreshToken = result.refreshToken
+                    refreshToken = result.refreshToken,
+                    expiresIn = jwtConfig.accessTokenExpirationMinutes * 60
                 )
             )
         }
@@ -148,11 +156,13 @@ fun Route.authRoutes() {
 
                     accessToken =
                         result.accessToken,
-                    refreshToken = result.refreshToken
+                    refreshToken = result.refreshToken,
+                    expiresIn = jwtConfig.accessTokenExpirationMinutes * 60
                 )
             )
         }
 
+        }
         authenticate(
             JWT_AUTH
         ) {

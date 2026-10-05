@@ -49,6 +49,9 @@ dependencies {
     implementation("io.ktor:ktor-server-cors-jvm:$ktorVersion")
 
     implementation("io.ktor:ktor-server-default-headers-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-rate-limit-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-id-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-forwarded-header-jvm:$ktorVersion")
 
     // Authentication - lo utilizaremos en la siguiente fase
     implementation("io.ktor:ktor-server-auth-jvm:$ktorVersion")
@@ -139,9 +142,10 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.0")
-
+    testImplementation("io.ktor:ktor-client-content-negotiation-jvm:${ktorVersion}")
     testImplementation("org.testcontainers:junit-jupiter:${testcontainersVersion}")
     testImplementation("org.testcontainers:postgresql:${testcontainersVersion}")
+    testImplementation("io.swagger.parser.v3:swagger-parser-v3:2.1.44")
 
     // --------------------------------------------------
     // AUTH
@@ -170,4 +174,12 @@ dependencies {
 }
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>().configureEach {
+    // Ktor configuration loaders and Flyway database plugins use ServiceLoader.
+    filesMatching("META-INF/services/**") {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+    mergeServiceFiles()
 }

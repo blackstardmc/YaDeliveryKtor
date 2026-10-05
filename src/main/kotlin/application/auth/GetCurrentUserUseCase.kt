@@ -1,6 +1,7 @@
 package com.blackneko.application.auth
 
 import com.blackneko.application.exception.NotFoundException
+import com.blackneko.application.exception.AuthenticationException
 import com.blackneko.domain.user.User
 import com.blackneko.domain.user.UserRepository
 import java.util.UUID
@@ -13,10 +14,12 @@ class GetCurrentUserUseCase(
         userId: UUID
     ): User {
 
-        return userRepository.findById(
+        val user = userRepository.findById(
             userId
         ) ?: throw NotFoundException(
             "User not found"
         )
+        if (!user.isActive) throw AuthenticationException()
+        return user
     }
 }

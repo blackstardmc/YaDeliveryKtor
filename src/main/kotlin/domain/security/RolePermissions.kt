@@ -10,6 +10,7 @@ object RolePermissions {
             Role.CUSTOMER to
                     setOf(
                         Permission.PROFILE_READ,
+                        Permission.ADDRESS_MANAGE,
                         Permission.ORDER_CREATE,
                         Permission.ORDER_READ_OWN,
                         Permission.ORDER_CANCEL_OWN
@@ -20,6 +21,9 @@ object RolePermissions {
                         Permission.PROFILE_READ,
 
                         Permission.RESTAURANT_UPDATE,
+                        Permission.RESTAURANT_CREATE,
+                        Permission.ADDRESS_MANAGE,
+                        Permission.CATEGORY_MANAGE,
 
                         Permission.PRODUCT_CREATE,
                         Permission.PRODUCT_UPDATE,

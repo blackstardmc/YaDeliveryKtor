@@ -3,6 +3,8 @@ package com.blackneko.presentation.security
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.blackneko.infrastructure.security.JwtConfig
+import com.blackneko.domain.user.Role
+import com.blackneko.presentation.common.ErrorResponse
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
@@ -12,9 +14,9 @@ import java.util.UUID
 
 const val JWT_AUTH = "auth-jwt"
 
-fun Application.configureAuthentication() {
+fun Application.configureAuthentication(config: JwtConfig? = null) {
 
-    val jwtConfig by inject<JwtConfig>()
+    val jwtConfig = config ?: inject<JwtConfig>().value
 
     val algorithm =
         Algorithm.HMAC256(
@@ -52,6 +54,10 @@ fun Application.configureAuthentication() {
                         subject
                     )
 
+                    if (credential.payload.expiresAt == null) return@validate null
+                    val roles = credential.payload.getClaim("roles").asList(String::class.java)
+                    if (roles.isNullOrEmpty() || roles.any { role -> Role.entries.none { it.name == role } }) return@validate null
+
                     JWTPrincipal(
                         credential.payload
                     )
@@ -66,11 +72,7 @@ fun Application.configureAuthentication() {
 
                 call.respond(
                     io.ktor.http.HttpStatusCode.Unauthorized,
-                    mapOf(
-                        "error" to "unauthorized",
-                        "message" to
-                                "Authentication required"
-                    )
+                    ErrorResponse("UNAUTHORIZED", "Authentication required")
                 )
             }
         }

@@ -2,6 +2,10 @@ package com.blackneko.config
 
 
 import com.blackneko.application.TransactionRunner
+import com.blackneko.application.EntityLocks
+import com.blackneko.application.ReadinessProbe
+import com.blackneko.infrastructure.database.DatabaseReadinessProbe
+import com.blackneko.infrastructure.database.EntityLocksImpl
 import com.blackneko.domain.address.AddressRepository
 import com.blackneko.domain.auth.RefreshTokenRepository
 import com.blackneko.domain.category.CategoryRepository
@@ -33,6 +37,9 @@ fun infrastructureModule(
     dataSource: HikariDataSource,
     database: Database
 ) = module {
+
+    single<EntityLocks> { EntityLocksImpl(get()) }
+    single<ReadinessProbe> { DatabaseReadinessProbe(get()) }
 
     single<DatabaseConfig> {
         databaseConfig

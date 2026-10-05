@@ -14,6 +14,8 @@ class MigrationIntegrationTest :
         val expectedTables =
             setOf(
                 "users",
+                "refresh_tokens",
+                "order_requests",
                 "user_roles",
                 "addresses",
                 "restaurants",

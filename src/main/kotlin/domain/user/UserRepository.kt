@@ -1,6 +1,7 @@
 package com.blackneko.domain.user
 
 import java.util.UUID
+import com.blackneko.domain.shared.PageRequest
 
 
 interface UserRepository {
@@ -36,5 +37,5 @@ interface UserRepository {
         phone: String
     ): Boolean
 
-    suspend fun findAll(): List<User>
+    suspend fun findAll(page: PageRequest = PageRequest()): List<User>
 }

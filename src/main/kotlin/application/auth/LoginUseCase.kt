@@ -16,6 +16,8 @@ class LoginUseCase(
         command: LoginCommand
     ): LoginResult {
 
+        LoginValidator.validate(command)
+
         val identifier =
             command.identifier.trim()
 
@@ -33,24 +35,16 @@ class LoginUseCase(
                 )
             }
 
-        if (user == null) {
-            throw AuthenticationException()
-        }
-
-        if (!user.isActive) {
-            throw AuthenticationException()
-        }
-
         val validPassword =
             passwordHasher.verify(
                 password =
                     command.password,
 
                 hash =
-                    user.passwordHash
+                    user?.passwordHash ?: dummyPasswordHash
             )
 
-        if (!validPassword) {
+        if (user == null || !user.isActive || !validPassword) {
             throw AuthenticationException()
         }
         val session =
@@ -64,10 +58,11 @@ class LoginUseCase(
                 user.roles,
 
             accessToken =
-                tokenService.generateAccessToken(
-                    user
-                ),
+                    session.accessToken,
             refreshToken = session.refreshToken
         )
     }
+
+    // Perform BCrypt verification for missing users too, to reduce timing-based enumeration.
+    private val dummyPasswordHash by lazy { passwordHasher.hash(java.util.UUID.randomUUID().toString()) }
 }

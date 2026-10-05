@@ -109,6 +109,8 @@ class ProductRepositoryImpl(
                 .where {
                     buildFilter(filter)
                 }
+                .orderBy(ProductsTable.id, org.jetbrains.exposed.v1.core.SortOrder.ASC)
+                .limit(filter.page.limit).offset(filter.page.offset.toLong())
                 .map {
                     it.toProduct()
                 }

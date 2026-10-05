@@ -1,6 +1,7 @@
 package com.blackneko.domain.restaurant
 
 import java.util.UUID
+import com.blackneko.domain.shared.PageRequest
 
 interface RestaurantRepository {
 
@@ -9,10 +10,9 @@ interface RestaurantRepository {
     ): Restaurant?
 
     suspend fun findByOwner(
-        ownerId: UUID
-    ): List<Restaurant>
+        ownerId: UUID, page: PageRequest = PageRequest()): List<Restaurant>
 
-    suspend fun findAllActive(): List<Restaurant>
+    suspend fun findAllActive(page: PageRequest = PageRequest()): List<Restaurant>
 
     suspend fun save(
         restaurant: Restaurant

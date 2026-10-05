@@ -6,5 +6,6 @@ data class ProductFilter(
     val restaurantId: UUID,
     val categoryId: UUID? = null,
     val available: Boolean? = null,
-    val search: String? = null
+    val search: String? = null,
+    val page: com.blackneko.domain.shared.PageRequest = com.blackneko.domain.shared.PageRequest()
 )
