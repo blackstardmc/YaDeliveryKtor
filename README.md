@@ -45,3 +45,4 @@ Auth limita 20 mutaciones por minuto por IP y proceso, con `Retry-After` al reci
 - [Auditoría, fases y validación](docs/IMPLEMENTATION.md).
 - OpenAPI se genera a partir de DTOs y metadatos explícitos de rutas: `python scripts/generate_openapi.py`. Verificar con `python scripts/generate_openapi.py --check`.
 - Smoke de la imagen final: `pwsh scripts/smoke.ps1`. Usa recursos efímeros propios y los elimina al terminar.
+- Smoke de Compose: `pwsh scripts/smoke-compose.ps1`. Usa la imagen local `delivery-backend:mvp`, un volumen propio y un puerto temporal; comprueba salud, reinicio y caída de PostgreSQL.

@@ -89,6 +89,14 @@ Si Docker Hub no está disponible, se puede probar únicamente el jar en una ima
 
 Esta alternativa verifica el jar y el bootstrap real; no sustituye una construcción completa del Dockerfile. La validación HTTPS requiere el dominio real y se realiza en el VPS; este trabajo no despliega ni cambia DNS.
 
+Para comprobar el conjunto base de Compose después de construir la imagen:
+
+```powershell
+pwsh scripts/smoke-compose.ps1
+```
+
+Esta prueba utiliza `compose.yaml` con un overlay temporal que selecciona la imagen local y reemplaza el volumen por uno exclusivo de la ejecución. No carga `.env`; genera secretos temporales y usa un puerto aleatorio en loopback. Comprueba healthchecks, migraciones, registro, persistencia tras reiniciar el backend y readiness durante una caída de PostgreSQL. Elimina su proyecto y volumen al finalizar. No incluye Caddy ni verifica HTTPS público.
+
 ## Extensión de tiempo real
 
 REST permite recuperar pedidos e historial después de una desconexión. WebSockets queda fuera del MVP estable. Una implementación futura debe autenticar cada conexión, autorizar cada suscripción por pedido y permitir resuscripción usando el estado REST. No usar eventos en memoria como fuente definitiva de estado ni enviar pedidos ajenos a un cliente, restaurante o driver.

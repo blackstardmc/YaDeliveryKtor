@@ -1,6 +1,6 @@
 # Verificación del MVP
 
-Validación inicial: 4 de octubre de 2026, America/Havana. Imagen Docker verificada el 5 de octubre de 2026.
+Validación inicial: 4 de octubre de 2026, America/Havana. Imagen Docker verificada el 5 de octubre; Compose base verificado el 6 de octubre de 2026.
 
 ## Resultado
 
@@ -48,4 +48,6 @@ El smoke ejecutó el contenido de esta imagen sin montar un jar externo y pasó 
 
 ## Alcance pendiente
 
-No se realizó un arranque del conjunto mediante Compose, un despliegue real en VPS ni una comprobación de HTTPS con dominio público. Los pasos están en [DEPLOYMENT.md](DEPLOYMENT.md). No se modificaron DNS, secretos locales ni datos de desarrollo.
+El 6 de octubre se ejecutó `scripts/smoke-compose.ps1` con resultado **COMPOSE SMOKE PASSED**. El conjunto de `compose.yaml` arrancó con ambos servicios saludables; se comprobaron seis migraciones, registro, identidad persistida tras reiniciar el backend, readiness 503 al detener PostgreSQL y liveness 200. Se utilizó un proyecto exclusivo, volumen propio, secretos temporales y puerto loopback aleatorio. El script consulta nuevamente el puerto después del reinicio porque Docker puede reasignarlo.
+
+No se realizó un despliegue real en VPS ni una comprobación de Caddy/HTTPS con dominio público. Los pasos están en [DEPLOYMENT.md](DEPLOYMENT.md). No se modificaron DNS, secretos locales ni datos de desarrollo.
