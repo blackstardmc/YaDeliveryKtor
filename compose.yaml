@@ -40,12 +40,12 @@ services:
       DELIVERY_FEE_CENTS: ${DELIVERY_FEE_CENTS:-0}
       TRUST_PROXY: ${TRUST_PROXY:-false}
     ports:
-      - "127.0.0.1:${PORT:-8080}:8080"
+      - "0.0.0.0:${PORT:-8080}:8080"
     networks: [delivery-network]
 
 volumes:
   postgres_data:
-    name: delivery-postgres-data
+#    name: delivery-postgres-data
 
 networks:
   delivery-network:
