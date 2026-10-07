@@ -45,7 +45,6 @@ services:
 
 volumes:
   postgres_data:
-    name: delivery-postgres-data
 
 networks:
   delivery-network:
