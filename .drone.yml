@@ -1,0 +1,86 @@
+kind: pipeline
+type: docker
+name: deploy_delivery_dev
+
+trigger:
+  branch:
+    - master
+
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
+steps:
+- name: build and deploy delivery_dev
+  image: docker:24.0
+  environment:
+    COMPOSE_PROJECT_NAME_DEV:
+      from_secret: COMPOSE_PROJECT_NAME_DEV
+    PORT_DEV:
+      from_secret: PORT_DEV
+    HOST_DEV:
+      from_secret: HOST_DEV
+    DB_HOST_DEV:
+      from_secret: DB_HOST_DEV
+    DB_PORT_DEV:
+      from_secret: DB_PORT_DEV
+    DB_NAME_DEV:
+      from_secret: DB_NAME_DEV
+    DB_USER_DEV:
+      from_secret: DB_USER_DEV
+    DB_PASSWORD_DEV:
+      from_secret: DB_PASSWORD_DEV
+    DB_POOL_SIZE_DEV:
+      from_secret: DB_POOL_SIZE_DEV
+    JWT_ISSUER_DEV:
+      from_secret: JWT_ISSUER_DEV
+    JWT_AUDIENCE_DEV:
+      from_secret: JWT_AUDIENCE_DEV
+    JWT_REALM_DEV:
+      from_secret: JWT_REALM_DEV
+    JWT_SECRET_DEV:
+      from_secret: JWT_SECRET_DEV
+    JWT_ACCESS_EXPIRATION_MINUTES_DEV:
+      from_secret: JWT_ACCESS_EXPIRATION_MINUTES_DEV
+    REFRESH_TOKEN_EXPIRATION_DAYS_DEV:
+      from_secret: REFRESH_TOKEN_EXPIRATION_DAYS_DEV
+    CORS_ALLOWED_HOSTS_DEV:
+      from_secret: CORS_ALLOWED_HOSTS_DEV
+    DELIVERY_FEE_CENTS_DEV:
+      from_secret: FEE_CENTS_DEV
+    TRUST_PROXY_DEV:
+      from_secret: TRUST_PROXY_DEV
+    API_DOMAIN_DEV:
+      from_secret: API_DOMAIN_DEV
+  commands:
+    - mkdir -p /delivery && cp -a . /delivery/ && cd /delivery
+    - |
+      cat > .env.dev << EOF
+      COMPOSE_PROJECT_NAME=$COMPOSE_PROJECT_NAME_DEV
+      PORT=$PORT_DEV
+      HOST=$HOST_DEV
+      DB_HOST=$DB_HOST_DEV
+      DB_PORT=$DB_PORT_DEV
+      DB_NAME=$DB_NAME_DEV
+      DB_USER=$DB_USER_DEV
+      DB_PASSWORD=$DB_PASSWORD_DEV
+      DB_POOL_SIZE=$DB_POOL_SIZE_DEV
+      JWT_ISSUER=$JWT_ISSUER_DEV
+      JWT_AUDIENCE=$JWT_AUDIENCE_DEV
+      JWT_REALM=$JWT_REALM_DEV
+      JWT_SECRET=$JWT_SECRET_DEV
+      JWT_ACCESS_EXPIRATION_MINUTES=$JWT_ACCESS_EXPIRATION_MINUTES_DEV
+      REFRESH_TOKEN_EXPIRATION_DAYS=$REFRESH_TOKEN_EXPIRATION_DAYS_DEV
+      CORS_ALLOWED_HOSTS=$CORS_ALLOWED_HOSTS_DEV
+      DELIVERY_FEE_CENTS=$DELIVERY_FEE_CENTS_DEV
+      TRUST_PROXY=$TRUST_PROXY_DEV
+      API_DOMAIN=$API_DOMAIN_DEV
+      EOF
+    - docker compose down || true
+    - docker compose --env-file .env.dev up -d --build --force-recreate
+  volumes:
+    - name: docker_sock
+      path: /var/run/docker.sock
+  depends_on:
+    - build
