@@ -165,7 +165,7 @@ steps:
       API_DOMAIN=$API_DOMAIN_PROD
       EOF
     - docker compose down || true
-    - docker compose -f compose.yaml -f compose.prod.yaml --env-file .env.prod up -d --build
+    - docker compose --env-file .env.prod up -d --build
   volumes:
     - name: docker_sock
       path: /var/run/docker.sock
